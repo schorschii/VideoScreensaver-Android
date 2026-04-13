@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Video-Bildschirmschoner</string>
+    <string name="version">Version</string>
+    <string name="settings">Einstellungen</string>
+    <string name="general">Allgemein</string>
+    <string name="set_as_screensaver_in_android_settings">Als Bildschirmschoner in Android-Einstellungen festlegen</string>
+    <string name="unlock_settings">Erweiterte Einstellungen freischalten</string>
+    <string name="purchase_support_note">Durch das Freischalten der Einstellungen mit einem In-App-Kauf unterstützen Sie die Weiterentwicklung dieser App ♥</string>
+    <string name="review_app_title">Gefällt Ihnen die App? Bitte geben Sie eine Bewertung ab.</string>
+    <string name="review_now">Jetzt im Play Store bewerten</string>
+    <string name="play_store_not_avail">Google Play Store not available</string>
+    <string name="amazon_store_not_avail">Amazon App Store not available</string>
+    <string name="could_not_fetch_prices">Die aktuellen Preise für In-App-Einkäufe konnten nicht geladen werden.</string>
+    <string name="apply">Übernehmen</string>
+    <string name="screensaver_not_supported">Dieses Gerät unterstützt keine Bildschirmschoner.</string>
+    <string name="select_video">Video auswählen</string>
+    <string name="background_color">Hintergrundfarbe</string>
+    <string name="loop_video">Video wiederholen</string>
+    <string name="stretch_video">Video strecken</string>
+    <string name="gauges">Anzeigen</string>
+    <string name="clock">Uhr</string>
+    <string name="hrs24">24 Stunden</string>
+    <string name="date">Datum</string>
+    <string name="date_format">Datumsformat</string>
+    <string name="top">Oben</string>
+    <string name="bottom">Unten</string>
+    <string name="left">Links</string>
+    <string name="right">Rechts</string>
+    <string name="center">Mitte</string>
+    <string name="clock_date_color">Uhr-/Datumsfarbe</string>
+    <string name="red">Rot</string>
+    <string name="green">Grün</string>
+    <string name="blue">Blau</string>
+    <string name="choose_color">Farbe wählen</string>
+    <string name="use_custom_color">Eigene Farbe verwenden</string>
+    <string name="apply_for_all">Für alle anwenden</string>
+    <string name="ok">OK</string>
+    <string name="fire_tv_notes">Wichtiger Hinweis für FireTV-Geräte: Amazon FireOS erlaubt es offiziell nicht den Systembildschirmschoner auf eine Drittanbieter-App zu ändern, aber es gibt ein Workaround über die Entwicklertools. Details werden im Github-Repo erklärt (siehe unten). Ohne den Workaround kann die Uhr auf FireTV-Geräten trotzdem wie eine normale App gestartet werden.</string>
+    <string name="high_contrast_text_notes">Achtung: Sie haben „Text mit hohem Kontrast“ in den Barrierefreiheitseinstellungen des Android-Systems aktiviert. Dadurch wird das Design der Digitaluhr zerstört. Bitte deaktivieren Sie diese Einstellung für ein ordnungsgemäßes Aussehen.</string>
+    <string name="no_web_browser_found">No web browser found to open this URL</string>
+    <string name="reset_default">Zurücksetzen</string>
+    <string name="date_format_placeholders_help_title">Sie können die folgenden Platzhalter verwenden (Beispiele in Klammern)</string>
+    <string name="date_format_placeholders_help">
+    G - Epochenbezeichnung (AD)\n
+    yyyy oder yy - Jahr (2024 oder 24)\n
+    MM oder MMM oder MMMM - Monat (12 oder Dez oder Dezember)\n
+    ww - Woche des Jahrs (27)\n
+    W - Woche des Monats (2)\n
+    DDD - Tag des Jahres (189)\n
+    d oder dd - Tag des Monats (1 oder 01)\n
+    F - Tag der Woche im Monat (2)\n
+    EEEE oder E - Wochentag-Name (Montag oder Mo.)\n
+    u - Wochentag-Nummer (1-7)\n
+    a - AM/PM-Markierung\n
+    HH - Stunde des Tages (0-23)\n
+    hh - Stunde in AM/PM (1-12)\n
+    mm - Minute der Stunde\n
+    ss - Sekunde der Minute\n
+    zzzz oder z - Zeitzonenname (Pacific Standard Time oder PST)\n
+    Z - Zeitzone nach RFC 822 (-0800)\n
+    XXX oder X - Zeitzone nach RFC 8601 (-08:00 oder -08)\n\n
+    Benutzerdefinierter Text kann in einfachen Anführungszeichen hinzugefügt werden, z. B. \'dein Text\'.
+    </string>
+    <string name="volume">Lautstärke</string>
+    <string name="please_select_a_video_in_the_settings">Bitte wählen Sie ein Video in den Einstellungen.</string>
+    <string name="more_apps">Weitere Apps</string>
+    <string name="clock_screensaver_for_android">Uhr-Bildschirmschoner für Android</string>
+    <string name="customer_database_for_android">Kundendatenbank für Android</string>
+    <string name="remote_pointer_for_android">RemotePointer für Android</string>
+    <string name="ballbreak_for_android">BallBreak für Android</string>
+    <string name="open_computer_orchestration">Open Computer Orchestration</string>
+    <string name="open_source_text">Diese App ist Open Source. Wenn Sie die App oder die Übersetzungen verbessern möchten, besuchen Sie bitte das Repository auf Github.</string>
+    <string name="open_source">Gabel mich</string>
+</resources>

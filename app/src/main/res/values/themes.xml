@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.VideoScreensaver" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary</item>
+        <item name="colorAccent">@color/primary</item>
+
+        <!-- no action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.VideoScreensaver" parent="Base.Theme.VideoScreensaver" />
+
+    <!-- settings container width: match parent but only until a max size (better UX for TVs) -->
+    <style name="width_match_parent_max_200">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="Widget.AppCompat.Button.Colored" parent="@style/ThemeOverlay.AppCompat.DayNight">
+        <!-- force white text on colored buttons -->
+        <item name="android:textColor">#fff</item>
+        <item name="backgroundTint">@color/primary</item>
+    </style>
+</resources>

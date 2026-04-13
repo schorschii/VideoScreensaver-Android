@@ -1,0 +1,82 @@
+<resources>
+    <string name="project_website" translatable="false">https://github.com/schorschii/VideoScreensaver-Android</string>
+
+    <string name="dseg_font_note" translatable="false">
+DSEG Font Copyright (c) 2017, keshikan (http://www.keshikan.net). Cairo Font Copyright (c) Mohamed Gaber.
+This Font Software is licensed under the SIL Open Font License, Version 1.1 (http://scripts.sil.org/OFL).
+Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License, Version 2.0.
+    </string>
+
+    <string name="app_name">Video Screensaver</string>
+    <string name="version">Version</string>
+    <string name="settings">Settings</string>
+    <string name="general">General</string>
+    <string name="set_as_screensaver_in_android_settings">Set as screensaver in Android settings</string>
+    <string name="unlock_settings">Unlock Advanced Settings</string>
+    <string name="purchase_support_note">By unlocking the settings with an in-app purchase, you support the further development of this app ♥</string>
+    <string name="review_app_title">Do you like this app? Please submit a review.</string>
+    <string name="review_now">Rate now at the Play Store</string>
+    <string name="play_store_not_avail">Google Play Store not available</string>
+    <string name="amazon_store_not_avail">Amazon App Store not available</string>
+    <string name="could_not_fetch_prices">Could not fetch current prices for in-app purchases.</string>
+    <string name="apply">Apply</string>
+    <string name="screensaver_not_supported">This device does not support Android screensavers.</string>
+    <string name="select_video">Select Video</string>
+    <string name="background_color">Background Color</string>
+    <string name="loop_video">Loop Video</string>
+    <string name="stretch_video">Stretch Video</string>
+    <string name="gauges">Gauges</string>
+    <string name="clock">Clock</string>
+    <string name="hrs24">24 Hours</string>
+    <string name="date">Date</string>
+    <string name="date_format">Date Format</string>
+    <string name="top">Top</string>
+    <string name="bottom">Bottom</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="center">Center</string>
+    <string name="clock_date_color">Clock/Date Color</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+    <string name="choose_color">Choose color</string>
+    <string name="use_custom_color">Use Custom Color</string>
+    <string name="apply_for_all">Apply for all</string>
+    <string name="ok">OK</string>
+    <string name="fire_tv_notes">Important notice for FireTV devices: Amazon FireOS does not officially allow changing the system screensaver to a 3rd party app, but there is a workaround possible using the developer tools. Details are explained in the Github repo (see below). Without the workaround, the clock can still be started on FireTV devices like a normal app.</string>
+    <string name="high_contrast_text_notes">Attention: you have \'High Contrast Text\' enabled in the Android system accessibility settings. This will destroy the digital clock design. Please disable this setting for a proper user experience.</string>
+    <string name="no_web_browser_found">No web browser found to open this URL</string>
+    <string name="reset_default">Reset default</string>
+    <string name="date_format_placeholders_help_title">You can use the following placeholders (example in brackets)</string>
+    <string name="date_format_placeholders_help">
+    G - Era designator (AD)\n
+    yyyy or yy - Year (2024 or 24)\n
+    MM or MMM or MMMM - Month (12 or Dec or December)\n
+    ww - Week in year (27)\n
+    W - Week in month (2)\n
+    DDD - Day in year (189)\n
+    d or dd - Day in month (1 or 01)\n
+    F - Day of week in month (2)\n
+    EEEE or E - Week day name (Monday or Mon.)\n
+    u - Day number of week (1-7)\n
+    a - AM/PM marker\n
+    HH - Hour in day (0-23)\n
+    hh - Hour in AM/PM (1-12)\n
+    mm - Minute in hour\n
+    ss - Second in minute\n
+    zzzz or z - Time zone name (Pacific Standard Time or PST)\n
+    Z - RFC 822 time zone (-0800)\n
+    XXX or X - RFC 8601 time zone (-08:00 or -08)\n\n
+    Custom text can be added in single quotes, e.g. \'your text\'.
+    </string>
+    <string name="volume">Volume</string>
+    <string name="please_select_a_video_in_the_settings">Please select a video in the settings.</string>
+    <string name="more_apps">More Apps</string>
+    <string name="clock_screensaver_for_android">Clock Screensaver for Android</string>
+    <string name="customer_database_for_android">Customer Database for Android</string>
+    <string name="remote_pointer_for_android">RemotePointer for Android</string>
+    <string name="ballbreak_for_android">BallBreak for Android</string>
+    <string name="open_computer_orchestration">Open Computer Orchestration</string>
+    <string name="open_source_text">This app is Open Source. If you want to improve the app or its translations, please check out the repository on Github.</string>
+    <string name="open_source">Fork Me</string>
+</resources>

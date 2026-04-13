@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+android {
+    defaultConfig {
+        applicationId "systems.sieber.vscreensaver"
+        minSdkVersion 17
+        targetSdk 36
+        compileSdk 36
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    output.outputFileName = 'videoscreensaver.apk'
+                }
+            }
+        }
+    }
+    flavorDimensions "appstore"
+    productFlavors {
+        standalone {
+            dimension "appstore"
+            dependenciesInfo {
+                // Disables dependency metadata when building APKs.
+                includeInApk = false
+                // Disables dependency metadata when building Android App Bundles.
+                includeInBundle = false
+            }
+        }
+        google {
+            dimension "appstore"
+            minSdkVersion 21 // for Play billing library >= 7.0.0
+        }
+    }
+    namespace 'systems.sieber.vscreensaver'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    googleImplementation 'com.android.billingclient:billing:8.0.0'
+}

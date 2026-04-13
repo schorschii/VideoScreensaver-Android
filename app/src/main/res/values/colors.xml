@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#4FAA5E</color>
+    <color name="settingsCheckBoxes">#222</color>
+    <color name="previewBorder">#757575</color> <!-- should look like checkboxes -->
+</resources>

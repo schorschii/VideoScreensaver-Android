@@ -1,0 +1,209 @@
+package systems.sieber.vscreensaver;
+
+import static systems.sieber.vscreensaver.BaseSettingsActivity.SHARED_PREF_DOMAIN;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.VideoView;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class VideoScreensaverView extends RelativeLayout {
+
+    VideoView mVideoView;
+    TextView mTextViewClock;
+    TextView mTextViewDate;
+    LinearLayout mLinearLayoutClockDate;
+
+    boolean mHrs24;
+    String mDateFormat;
+
+    Timer mTimerClock;
+
+    private ErrorListener mErrorListener = null;
+    public interface ErrorListener {
+        void error();
+    }
+    void setErrorListener(ErrorListener listener) {
+        mErrorListener = listener;
+    }
+
+    public VideoScreensaverView(Context c, AttributeSet attrs) {
+        super(c, attrs);
+        inflate(getContext(), R.layout.view_screensaver, this);
+        mVideoView = findViewById(R.id.videoViewMain);
+        mTextViewClock = findViewById(R.id.textViewClock);
+        mTextViewDate = findViewById(R.id.textViewDate);
+        mLinearLayoutClockDate = findViewById(R.id.linearLayoutClockDate);
+        loadSettings();
+
+        // apply the insets as a margin to the view, so that elements at the bottom
+        // of the ScrollView do not get hidden behind the navigation bar
+        ViewCompat.setOnApplyWindowInsetsListener(mLinearLayoutClockDate, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout());
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            mlp.leftMargin = insets.left;
+            mlp.rightMargin = insets.right;
+            mlp.topMargin = insets.top;
+            mlp.bottomMargin = insets.bottom;
+            v.setLayoutParams(mlp);
+            // Return CONSUMED if you don't want the window insets to keep passing down to descendant views.
+            return WindowInsetsCompat.CONSUMED;
+        });
+
+        // start clock timer
+        updateClock();
+        TimerTask taskClockDate = new TimerTask() {
+            @SuppressLint("SimpleDateFormat")
+            @Override
+            public void run() {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateClock();
+                    }
+                });
+            }
+        };
+        mTimerClock = new Timer(false);
+        mTimerClock.schedule(taskClockDate, 0, 1000);
+    }
+
+    private void updateClock() {
+        final Calendar cal = Calendar.getInstance();
+
+        final SimpleDateFormat sdfTime = new SimpleDateFormat(mHrs24 ? "HH:mm" : "h:mm");
+        mTextViewClock.setText(sdfTime.format(cal.getTime()));
+
+        try {
+            mTextViewDate.setText(
+                    new SimpleDateFormat(mDateFormat, Locale.getDefault())
+                            .format(cal.getTime())
+            );
+        } catch(IllegalArgumentException ignored) {
+            mTextViewDate.setText("---");
+        }
+    }
+
+    public void loadSettings() {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SHARED_PREF_DOMAIN, Context.MODE_PRIVATE);
+
+        mHrs24 = sharedPref.getBoolean("clock-hrs24", true);
+        mDateFormat = sharedPref.getString("date-format", BaseSettingsActivity.getDefaultDateFormat(getContext()));
+
+        final int colorBackground = sharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00));
+        this.setBackgroundColor(colorBackground);
+
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(sharedPref.getBoolean("video-loop", true));
+                float vol = (float) sharedPref.getInt("video-volume", 0) / 100;
+                mp.setVolume(vol, vol);
+            }
+        });
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                mVideoView.setBackgroundColor(colorBackground);
+                findViewById(R.id.linearLayoutNoVideo).setVisibility(VISIBLE);
+                if(mErrorListener != null) mErrorListener.error();
+                return true;
+            }
+        });
+        if(sharedPref.getBoolean("video-stretch", false)) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.removeRule(RelativeLayout.CENTER_IN_PARENT);
+            mVideoView.setLayoutParams(params);
+        } else {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+            params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+            mVideoView.setLayoutParams(params);
+        }
+
+        if(sharedPref.getBoolean("clock", false)) {
+            mTextViewClock.setVisibility(VISIBLE);
+        } else {
+            mTextViewClock.setVisibility(GONE);
+        }
+        if(sharedPref.getBoolean("date", false)) {
+            mTextViewDate.setVisibility(VISIBLE);
+        } else {
+            mTextViewDate.setVisibility(GONE);
+        }
+
+        int colorClock = sharedPref.getInt("color-clock", Color.argb(0xff, 0xff, 0xff, 0xff));
+        mTextViewClock.setTextColor(colorClock);
+        mTextViewDate.setTextColor(colorClock);
+        mTextViewClock.setTypeface( ResourcesCompat.getFont(getContext(), R.font.dseg7classic_regular) );
+        mTextViewDate.setTypeface( ResourcesCompat.getFont(getContext(), R.font.cairo_regular) );
+
+        LinearLayout.LayoutParams paramsc = (LinearLayout.LayoutParams) mTextViewClock.getLayoutParams();
+        paramsc.gravity = Gravity.NO_GRAVITY;
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mLinearLayoutClockDate.getLayoutParams();
+        params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        params.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
+        params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.removeRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.removeRule(RelativeLayout.CENTER_VERTICAL);
+        switch(sharedPref.getInt("clock-position-x", 0)) {
+            case 0:
+                paramsc.gravity = Gravity.LEFT;
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT); break;
+            case 1:
+                paramsc.gravity = Gravity.RIGHT;
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT); break;
+            case 2:
+                paramsc.gravity = Gravity.CENTER_HORIZONTAL;
+                params.addRule(RelativeLayout.CENTER_HORIZONTAL); break;
+        }
+        switch(sharedPref.getInt("clock-position-y", 0)) {
+            case 0:
+                params.addRule(RelativeLayout.ALIGN_PARENT_TOP); break;
+            case 1:
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM); break;
+            case 2:
+                params.addRule(RelativeLayout.CENTER_VERTICAL); break;
+        }
+        mLinearLayoutClockDate.setLayoutParams(params);
+        mTextViewClock.setLayoutParams(paramsc);
+    }
+
+    public void start() {
+        StorageControl storage = new StorageControl(getContext());
+        mVideoView.setVideoPath( "file://" + storage.getStorage(StorageControl.FILENAME_VIDEO).getAbsolutePath() );
+        mVideoView.start();
+        //mVideoView.setZOrderOnTop(true);
+        mVideoView.setBackgroundColor(0);
+        findViewById(R.id.linearLayoutNoVideo).setVisibility(GONE);
+    }
+
+}
