@@ -21,7 +21,7 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="could_not_fetch_prices">Could not fetch current prices for in-app purchases.</string>
     <string name="apply">Apply</string>
     <string name="screensaver_not_supported">This device does not support Android screensavers.</string>
-    <string name="select_video">Select Video</string>
+    <string name="select_own_video">Select own Video</string>
     <string name="background_color">Background Color</string>
     <string name="loop_video">Loop Video</string>
     <string name="stretch_video">Stretch Video</string>
@@ -79,4 +79,8 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="open_computer_orchestration">Open Computer Orchestration</string>
     <string name="open_source_text">This app is Open Source. If you want to improve the app or its translations, please check out the repository on Github.</string>
     <string name="open_source">Fork Me</string>
+    <string name="fireplace_landscape">Fireplace (Landscape)</string>
+    <string name="fireplace_portrait">Fireplace (Portrait)</string>
+    <string name="aquarium_landscape">Aquarium (Landscape)</string>
+    <string name="aquarium_portrait">Aquarium (Portrait)</string>
 </resources>

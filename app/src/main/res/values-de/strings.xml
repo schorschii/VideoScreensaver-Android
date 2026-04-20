@@ -14,7 +14,7 @@
     <string name="could_not_fetch_prices">Die aktuellen Preise für In-App-Einkäufe konnten nicht geladen werden.</string>
     <string name="apply">Übernehmen</string>
     <string name="screensaver_not_supported">Dieses Gerät unterstützt keine Bildschirmschoner.</string>
-    <string name="select_video">Video auswählen</string>
+    <string name="select_own_video">Eigenes Video auswählen</string>
     <string name="background_color">Hintergrundfarbe</string>
     <string name="loop_video">Video wiederholen</string>
     <string name="stretch_video">Video strecken</string>
@@ -72,4 +72,8 @@
     <string name="open_computer_orchestration">Open Computer Orchestration</string>
     <string name="open_source_text">Diese App ist Open Source. Wenn Sie die App oder die Übersetzungen verbessern möchten, besuchen Sie bitte das Repository auf Github.</string>
     <string name="open_source">Gabel mich</string>
+    <string name="fireplace_landscape">Lagerfeuer (Querformat)</string>
+    <string name="fireplace_portrait">Lagerfeuer (Hochformat)</string>
+    <string name="aquarium_landscape">Aquarium (Querformat)</string>
+    <string name="aquarium_portrait">Aquarium (Hochformat)</string>
 </resources>

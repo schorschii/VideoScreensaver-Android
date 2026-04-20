@@ -71,6 +71,10 @@ public class BaseSettingsActivity extends AppCompatActivity {
     RadioButton mRadioButtonLeft;
     RadioButton mRadioButtonRight;
     RadioButton mRadioButtonCenterX;
+    RadioButton mRadioButtonFireplaceLandscape;
+    RadioButton mRadioButtonFireplacePortrait;
+    RadioButton mRadioButtonAquariumLandscape;
+    RadioButton mRadioButtonAquariumPortrait;
     Button mButtonUnlockSettings;
     LinearLayout mLinearLayoutPurchaseContainer;
 
@@ -146,6 +150,10 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mRadioButtonLeft = findViewById(R.id.radioButtonLeft);
         mRadioButtonRight = findViewById(R.id.radioButtonRight);
         mRadioButtonCenterX = findViewById(R.id.radioButtonCenterX);
+        mRadioButtonFireplaceLandscape = findViewById(R.id.radioButtonFireplaceLandscape);
+        mRadioButtonFireplacePortrait = findViewById(R.id.radioButtonFireplacePortrait);
+        mRadioButtonAquariumLandscape = findViewById(R.id.radioButtonAquariumLandscape);
+        mRadioButtonAquariumPortrait = findViewById(R.id.radioButtonAquariumPortrait);
         mButtonUnlockSettings = findViewById(R.id.buttonUnlockSettings);
         mLinearLayoutPurchaseContainer = findViewById(R.id.linearLayoutInAppPurchase);
         loadSettings();
@@ -335,7 +343,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_video)), 1);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_own_video)), 1);
     }
 
     @Override
@@ -345,6 +353,11 @@ public class BaseSettingsActivity extends AppCompatActivity {
 
         StorageControl storage = new StorageControl(this);
         storage.processFile(StorageControl.FILENAME_VIDEO, data);
+        mRadioButtonFireplaceLandscape.setChecked(false);
+        mRadioButtonFireplacePortrait.setChecked(false);
+        mRadioButtonAquariumLandscape.setChecked(false);
+        mRadioButtonAquariumPortrait.setChecked(false);
+
     }
 
     private void loadSettings() {
@@ -373,6 +386,16 @@ public class BaseSettingsActivity extends AppCompatActivity {
             case 2:
                 mRadioButtonCenterY.setChecked(true); break;
         }
+        switch(mSharedPref.getInt("predefined-video", -1)) {
+            case 0:
+                mRadioButtonFireplaceLandscape.setChecked(true); break;
+            case 1:
+                mRadioButtonFireplacePortrait.setChecked(true); break;
+            case 2:
+                mRadioButtonAquariumLandscape.setChecked(true); break;
+            case 3:
+                mRadioButtonAquariumPortrait.setChecked(true); break;
+        }
     }
 
     private void saveSettings() {
@@ -388,6 +411,13 @@ public class BaseSettingsActivity extends AppCompatActivity {
         edit.putString("date-format", mEditTextDateFormat.getText().toString());
         edit.putInt("clock-position-x", mRadioButtonLeft.isChecked() ? 0 : mRadioButtonRight.isChecked() ? 1 : 2);
         edit.putInt("clock-position-y", mRadioButtonTop.isChecked() ? 0 : mRadioButtonBottom.isChecked() ? 1 : 2);
+        edit.putInt("predefined-video",
+                mRadioButtonFireplaceLandscape.isChecked() ? 0
+                        : mRadioButtonFireplacePortrait.isChecked() ? 1
+                        : mRadioButtonAquariumLandscape.isChecked() ? 2
+                        : mRadioButtonAquariumPortrait.isChecked() ? 3
+                        : -1
+        );
         edit.apply();
     }
 

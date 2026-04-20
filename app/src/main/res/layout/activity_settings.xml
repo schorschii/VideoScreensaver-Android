@@ -63,14 +63,42 @@
                 android:layout_height="wrap_content"
                 android:text="@string/general"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                    <RadioButton
+                        android:id="@+id/radioButtonFireplaceLandscape"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/fireplace_landscape" />
+                    <RadioButton
+                        android:id="@+id/radioButtonFireplacePortrait"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/fireplace_portrait" />
+                    <RadioButton
+                        android:id="@+id/radioButtonAquariumLandscape"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/aquarium_landscape" />
+                    <RadioButton
+                        android:id="@+id/radioButtonAquariumPortrait"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/aquarium_portrait" />
+            </RadioGroup>
             <Button
                 android:id="@+id/buttonSelectVideo"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onClickSelectVideo"
-                android:text="@string/select_video" />
+                android:text="@string/select_own_video" />
 
             <LinearLayout
                 android:layout_width="match_parent"

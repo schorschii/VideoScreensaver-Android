@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,6 +40,8 @@ public class VideoScreensaverView extends RelativeLayout {
 
     Timer mTimerClock;
 
+    SharedPreferences mSharedPref;
+
     private ErrorListener mErrorListener = null;
     public interface ErrorListener {
         void error();
@@ -50,6 +53,9 @@ public class VideoScreensaverView extends RelativeLayout {
     public VideoScreensaverView(Context c, AttributeSet attrs) {
         super(c, attrs);
         inflate(getContext(), R.layout.view_screensaver, this);
+        mSharedPref = getContext().getSharedPreferences(SHARED_PREF_DOMAIN, Context.MODE_PRIVATE);
+
+        // find views
         mVideoView = findViewById(R.id.videoViewMain);
         mTextViewClock = findViewById(R.id.textViewClock);
         mTextViewDate = findViewById(R.id.textViewDate);
@@ -105,19 +111,17 @@ public class VideoScreensaverView extends RelativeLayout {
     }
 
     public void loadSettings() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(SHARED_PREF_DOMAIN, Context.MODE_PRIVATE);
+        mHrs24 = mSharedPref.getBoolean("clock-hrs24", true);
+        mDateFormat = mSharedPref.getString("date-format", BaseSettingsActivity.getDefaultDateFormat(getContext()));
 
-        mHrs24 = sharedPref.getBoolean("clock-hrs24", true);
-        mDateFormat = sharedPref.getString("date-format", BaseSettingsActivity.getDefaultDateFormat(getContext()));
-
-        final int colorBackground = sharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00));
+        final int colorBackground = mSharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00));
         this.setBackgroundColor(colorBackground);
 
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(sharedPref.getBoolean("video-loop", true));
-                float vol = (float) sharedPref.getInt("video-volume", 0) / 100;
+                mp.setLooping(mSharedPref.getBoolean("video-loop", true));
+                float vol = (float) mSharedPref.getInt("video-volume", 0) / 100;
                 mp.setVolume(vol, vol);
             }
         });
@@ -130,7 +134,7 @@ public class VideoScreensaverView extends RelativeLayout {
                 return true;
             }
         });
-        if(sharedPref.getBoolean("video-stretch", false)) {
+        if(mSharedPref.getBoolean("video-stretch", false)) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -148,18 +152,18 @@ public class VideoScreensaverView extends RelativeLayout {
             mVideoView.setLayoutParams(params);
         }
 
-        if(sharedPref.getBoolean("clock", false)) {
+        if(mSharedPref.getBoolean("clock", false)) {
             mTextViewClock.setVisibility(VISIBLE);
         } else {
             mTextViewClock.setVisibility(GONE);
         }
-        if(sharedPref.getBoolean("date", false)) {
+        if(mSharedPref.getBoolean("date", false)) {
             mTextViewDate.setVisibility(VISIBLE);
         } else {
             mTextViewDate.setVisibility(GONE);
         }
 
-        int colorClock = sharedPref.getInt("color-clock", Color.argb(0xff, 0xff, 0xff, 0xff));
+        int colorClock = mSharedPref.getInt("color-clock", Color.argb(0xff, 0xff, 0xff, 0xff));
         mTextViewClock.setTextColor(colorClock);
         mTextViewDate.setTextColor(colorClock);
         mTextViewClock.setTypeface( ResourcesCompat.getFont(getContext(), R.font.dseg7classic_regular) );
@@ -174,7 +178,7 @@ public class VideoScreensaverView extends RelativeLayout {
         params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         params.removeRule(RelativeLayout.CENTER_HORIZONTAL);
         params.removeRule(RelativeLayout.CENTER_VERTICAL);
-        switch(sharedPref.getInt("clock-position-x", 0)) {
+        switch(mSharedPref.getInt("clock-position-x", 0)) {
             case 0:
                 paramsc.gravity = Gravity.LEFT;
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT); break;
@@ -185,7 +189,7 @@ public class VideoScreensaverView extends RelativeLayout {
                 paramsc.gravity = Gravity.CENTER_HORIZONTAL;
                 params.addRule(RelativeLayout.CENTER_HORIZONTAL); break;
         }
-        switch(sharedPref.getInt("clock-position-y", 0)) {
+        switch(mSharedPref.getInt("clock-position-y", 0)) {
             case 0:
                 params.addRule(RelativeLayout.ALIGN_PARENT_TOP); break;
             case 1:
@@ -198,8 +202,23 @@ public class VideoScreensaverView extends RelativeLayout {
     }
 
     public void start() {
-        StorageControl storage = new StorageControl(getContext());
-        mVideoView.setVideoPath( "file://" + storage.getStorage(StorageControl.FILENAME_VIDEO).getAbsolutePath() );
+        switch(mSharedPref.getInt("predefined-video", -1)) {
+            case 0:
+                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_landscape) );
+                break;
+            case 1:
+                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_portrait) );
+                break;
+            case 2:
+                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_landscape) );
+                break;
+            case 3:
+                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_portrait) );
+                break;
+            default:
+                StorageControl storage = new StorageControl(getContext());
+                mVideoView.setVideoPath( "file://" + storage.getStorage(StorageControl.FILENAME_VIDEO).getAbsolutePath() );
+        }
         mVideoView.start();
         //mVideoView.setZOrderOnTop(true);
         mVideoView.setBackgroundColor(0);
