@@ -5,9 +5,11 @@
 With this app, you can display any video as Android screensaver. In addition, you can add a digital clock and the date.
 
 ## Screenshots
+<p float="left">
 <img src=".github/screenshot1.png" alt="Screenshot Demo Fireplace Video" width="250"/>
 <img src=".github/screenshot2.png" alt="Screenshot Demo Aquarium Video" width="250"/>
 <img src=".github/screenshot3.png" alt="Screenshot Settings" width="250"/>
+</p>
 
 ## Screensaver on Amazon FireOS / FireTV
 Works only up to FireOS 7.x. On FireOS 8 and newer, it currently no longer seems to be possible to set a custom screensaver.
