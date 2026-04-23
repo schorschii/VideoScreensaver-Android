@@ -76,7 +76,7 @@ public class FullscreenDream extends DreamService {
             public void run() {
                 initContentView();
                 //mContentView.resume();
-                //mContentView.updateBattery(mBatLastPlugged, mBatLastLevel);
+                mContentView.updateBattery(mBatLastPlugged, mBatLastLevel);
             }
         }, 100);
     }
@@ -88,7 +88,7 @@ public class FullscreenDream extends DreamService {
         public void onReceive(Context ctxt, Intent intent) {
             mBatLastPlugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
             mBatLastLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-            //mContentView.updateBattery(mBatLastPlugged, mBatLastLevel);
+            mContentView.updateBattery(mBatLastPlugged, mBatLastLevel);
         }
     };
 

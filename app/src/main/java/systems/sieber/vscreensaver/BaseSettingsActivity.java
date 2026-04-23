@@ -77,6 +77,9 @@ public class BaseSettingsActivity extends AppCompatActivity {
     RadioButton mRadioButtonAquariumPortrait;
     Button mButtonUnlockSettings;
     LinearLayout mLinearLayoutPurchaseContainer;
+    CheckBox mCheckBoxShowBatteryInfo;
+    CheckBox mCheckBoxShowBatteryInfoWhenCharging;
+    CheckBox mCheckBoxShowAlarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,9 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mRadioButtonAquariumPortrait = findViewById(R.id.radioButtonAquariumPortrait);
         mButtonUnlockSettings = findViewById(R.id.buttonUnlockSettings);
         mLinearLayoutPurchaseContainer = findViewById(R.id.linearLayoutInAppPurchase);
+        mCheckBoxShowBatteryInfo = findViewById(R.id.checkBoxShowBatteryInfo);
+        mCheckBoxShowBatteryInfoWhenCharging = findViewById(R.id.checkBoxShowBatteryInfoWhenCharging);
+        mCheckBoxShowAlarms = findViewById(R.id.checkBoxShowAlarms);
         loadSettings();
 
         // init color picker
@@ -370,6 +376,9 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mCheckBoxHrs24.setChecked( mSharedPref.getBoolean("clock-hrs24", true) );
         mCheckBoxDate.setChecked( mSharedPref.getBoolean("date", false) );
         mEditTextDateFormat.setText( mSharedPref.getString("date-format", getDefaultDateFormat(this)) );
+        mCheckBoxShowBatteryInfo.setChecked( mSharedPref.getBoolean("show-battery-info", false) );
+        mCheckBoxShowBatteryInfoWhenCharging.setChecked( mSharedPref.getBoolean("show-battery-info-when-charging", false) );
+        mCheckBoxShowAlarms.setChecked(mSharedPref.getBoolean("show-alarms", false));
         switch(mSharedPref.getInt("clock-position-x", 0)) {
             case 0:
                 mRadioButtonLeft.setChecked(true); break;
@@ -418,6 +427,9 @@ public class BaseSettingsActivity extends AppCompatActivity {
                         : mRadioButtonAquariumPortrait.isChecked() ? 3
                         : -1
         );
+        edit.putBoolean("show-battery-info", mCheckBoxShowBatteryInfo.isChecked());
+        edit.putBoolean("show-battery-info-when-charging", mCheckBoxShowBatteryInfoWhenCharging.isChecked());
+        edit.putBoolean("show-alarms", mCheckBoxShowAlarms.isChecked());
         edit.apply();
     }
 
@@ -442,6 +454,9 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mRadioButtonLeft.setEnabled(state);
         mRadioButtonRight.setEnabled(state);
         mRadioButtonCenterX.setEnabled(state);
+        mCheckBoxShowBatteryInfo.setEnabled(state);
+        mCheckBoxShowBatteryInfoWhenCharging.setEnabled(state);
+        mCheckBoxShowAlarms.setEnabled(state);
     }
 
     public static boolean isHighContrastTextEnabled(Context context) {

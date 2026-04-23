@@ -230,6 +230,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_gravity="center"
                     android:text="@string/date" />
                 <LinearLayout
                     android:layout_width="0dp"
@@ -252,37 +253,65 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/viewColorChangerClock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:padding="@dimen/padding_setting"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground">
-                <FrameLayout
-                    android:layout_width="@dimen/width_color_preview"
-                    android:layout_height="match_parent"
-                    android:padding="@dimen/color_preview_border"
-                    android:background="@drawable/border">
-                    <View
-                        android:id="@+id/viewColorPreviewClock"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/primary" />
-                </FrameLayout>
-                <Space
-                    android:layout_width="@dimen/space_color_preview"
-                    android:layout_height="match_parent" />
-                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/checkBoxShowBatteryInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/checkbox_text_color"
-                    android:duplicateParentState="true"
-                    android:hyphenationFrequency="normal"
-                    android:text="@string/clock_date_color" />
+                    android:text="@string/show_battery_status_when_power_supply_is_not_plugged_in" />
+                <CheckBox
+                    android:id="@+id/checkBoxShowBatteryInfoWhenCharging"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/show_battery_status_when_power_supply_is_plugged_in" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/checkBoxShowAlarms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/show_alarms" />
+                <LinearLayout
+                    android:id="@+id/viewColorChangerClock"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_setting"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <FrameLayout
+                        android:layout_width="@dimen/width_color_preview"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/color_preview_border"
+                        android:background="@drawable/border">
+                        <View
+                            android:id="@+id/viewColorPreviewClock"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/primary" />
+                    </FrameLayout>
+                    <Space
+                        android:layout_width="@dimen/space_color_preview"
+                        android:layout_height="match_parent" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/checkbox_text_color"
+                        android:duplicateParentState="true"
+                        android:hyphenationFrequency="normal"
+                        android:text="@string/text_color" />
+                </LinearLayout>
             </LinearLayout>
 
             <RadioGroup

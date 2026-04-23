@@ -35,7 +35,7 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="center">Center</string>
-    <string name="clock_date_color">Clock/Date Color</string>
+    <string name="text_color">Text Color</string>
     <string name="red">Red</string>
     <string name="green">Green</string>
     <string name="blue">Blue</string>
@@ -83,4 +83,7 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="fireplace_portrait">Fireplace (Portrait)</string>
     <string name="aquarium_landscape">Aquarium (Landscape)</string>
     <string name="aquarium_portrait">Aquarium (Portrait)</string>
+    <string name="show_battery_status_when_power_supply_is_not_plugged_in">Battery Status when Discharging</string>
+    <string name="show_battery_status_when_power_supply_is_plugged_in">Battery Status when Charging</string>
+    <string name="show_alarms">Alarms</string>
 </resources>

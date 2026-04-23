@@ -3,8 +3,12 @@ package systems.sieber.vscreensaver;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.UiModeManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private VideoScreensaverView mVideoView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         // find views
         mControlsView = findViewById(R.id.linearLayoutControls);
         mContentView = findViewById(R.id.rootView);
+        mVideoView = findViewById(R.id.videoScreensaverView);
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +133,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
+        // init battery info
+        registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+        // start video
         VideoScreensaverView sv = findViewById(R.id.videoScreensaverView);
         sv.setErrorListener(new VideoScreensaverView.ErrorListener() {
             @Override
@@ -139,6 +149,14 @@ public class MainActivity extends AppCompatActivity {
 
         // enter fullscreen mode (again)
         hide();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // unregister receiver
+        unregisterReceiver(this.mBatInfoReceiver);
     }
 
     @Override
@@ -197,5 +215,14 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, SettingsActivity.class);
         settingsActivityResultLauncher.launch(i);
     }
+
+    private final BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context ctxt, Intent intent) {
+            int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            mVideoView.updateBattery(plugged, level);
+        }
+    };
 
 }
