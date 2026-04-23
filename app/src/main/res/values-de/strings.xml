@@ -79,4 +79,7 @@
     <string name="show_battery_status_when_power_supply_is_not_plugged_in">Akku-Status beim Entladen</string>
     <string name="show_battery_status_when_power_supply_is_plugged_in">Akku-Status beim Laden</string>
     <string name="show_alarms">Wecker</string>
+    <string name="buy_a_code">Code kaufen</string>
+    <string name="unlock_code">Freischaltcode</string>
+    <string name="activation_failed">Aktivierung fehlgeschlagen</string>
 </resources>
