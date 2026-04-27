@@ -1,9 +1,15 @@
 package systems.sieber.vscreensaver;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +25,8 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryProductDetailsResult;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +44,15 @@ public class SettingsActivity extends BaseSettingsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         me = this;
+
+        // init manual unlock
+        mButtonUnlockSettings.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                openUnlockInputBox("systems.sieber.vscreensaver.settings", "settings");
+                return false;
+            }
+        });
 
         // init billing library
         loadPurchases();
@@ -166,6 +183,50 @@ public class SettingsActivity extends BaseSettingsActivity {
                 .setProductDetailsParamsList(productDetailsParamsList)
                 .build();
         return mBillingClient.launchBillingFlow(this, flowParams);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void openUnlockInputBox(final String requestFeature, final String sku) {
+        final Dialog ad = new Dialog(this);
+        ad.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        ad.setContentView(R.layout.dialog_inputbox);
+        ad.findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ad.dismiss();
+                String text = ((EditText) ad.findViewById(R.id.editTextInputBox)).getText().toString().trim();
+                HttpRequest hr = new HttpRequest(getResources().getString(R.string.unlock_api), null);
+                ArrayList<KeyValueItem> headers = new ArrayList<>();
+                headers.add(new KeyValueItem("X-Unlock-Feature",requestFeature));
+                headers.add(new KeyValueItem("X-Unlock-Code",text));
+                hr.setRequestHeaders(headers);
+                hr.setReadyListener(new HttpRequest.readyListener() {
+                    @Override
+                    public void ready(int statusCode, String responseBody) {
+                        try {
+                            if(statusCode != 999) {
+                                throw new Exception("Invalid status code: " + statusCode);
+                            }
+                            JSONObject licenseInfo = new JSONObject(responseBody);
+                            mFc.unlockPurchase(sku);
+                            loadPurchases();
+                        } catch(Exception e) {
+                            Log.e("ACTIVATION",  e.getMessage() + " - " + responseBody);
+                            if(me == null || me.isFinishing() || me.isDestroyed()) return;
+                            AlertDialog ad = new AlertDialog.Builder(me).create();
+                            ad.setTitle(getResources().getString(R.string.activation_failed));
+                            ad.setMessage(e.getMessage());
+                            ad.setButton(Dialog.BUTTON_POSITIVE, getResources().getString(R.string.ok), (DialogInterface.OnClickListener) null);
+                            ad.show();
+                        }
+                    }
+                });
+                hr.execute();
+            }
+        });
+        if(ad.getWindow() != null)
+            ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        ad.show();
     }
 
 }
