@@ -42,6 +42,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
     TextView mTextViewClock;
     TextView mTextViewDate;
     LinearLayout mLinearLayoutClockDate;
+    LinearLayout mLinearLayoutBottomBar;
     View mBatteryView;
     TextView mBatteryText;
     ImageView mBatteryImage;
@@ -76,6 +77,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         mTextViewClock = findViewById(R.id.textViewClock);
         mTextViewDate = findViewById(R.id.textViewDate);
         mLinearLayoutClockDate = findViewById(R.id.linearLayoutClockDate);
+        mLinearLayoutBottomBar = findViewById(R.id.linearLayoutBottomBar);
         mBatteryView = findViewById(R.id.linearLayoutBattery);
         mBatteryText = findViewById(R.id.textViewBattery);
         mBatteryImage = findViewById(R.id.imageViewBattery);
@@ -194,18 +196,23 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         params.removeRule(RelativeLayout.CENTER_HORIZONTAL);
         params.removeRule(RelativeLayout.CENTER_VERTICAL);
+        LinearLayout.LayoutParams paramsb = (LinearLayout.LayoutParams) mLinearLayoutBottomBar.getLayoutParams();
+        paramsb.gravity = Gravity.NO_GRAVITY;
         switch(mSharedPref.getInt("clock-position-x", 0)) {
             case 0:
                 paramsc.gravity = Gravity.LEFT;
                 paramsd.gravity = Gravity.LEFT;
+                paramsb.gravity = Gravity.LEFT;
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT); break;
             case 1:
                 paramsc.gravity = Gravity.RIGHT;
                 paramsd.gravity = Gravity.RIGHT;
+                paramsb.gravity = Gravity.RIGHT;
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT); break;
             case 2:
                 paramsc.gravity = Gravity.CENTER_HORIZONTAL;
                 paramsd.gravity = Gravity.CENTER_HORIZONTAL;
+                paramsb.gravity = Gravity.CENTER_HORIZONTAL;
                 params.addRule(RelativeLayout.CENTER_HORIZONTAL); break;
         }
         switch(mSharedPref.getInt("clock-position-y", 0)) {
@@ -218,6 +225,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         }
         mLinearLayoutClockDate.setLayoutParams(params);
         mTextViewClock.setLayoutParams(paramsc);
+        mLinearLayoutBottomBar.setLayoutParams(paramsb);
     }
 
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
