@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
-    private VideoScreensaverView mVideoView;
+    private VideoScreensaverView mScreensaverView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK) {
+                        // new settings applied
                     }
                 }
             });
@@ -103,7 +104,13 @@ public class MainActivity extends AppCompatActivity {
         // find views
         mControlsView = findViewById(R.id.linearLayoutControls);
         mContentView = findViewById(R.id.rootView);
-        mVideoView = findViewById(R.id.videoScreensaverView);
+        mScreensaverView = findViewById(R.id.videoScreensaverView);
+        mScreensaverView.setErrorListener(new VideoScreensaverView.ErrorListener() {
+            @Override
+            public void error() {
+                show();
+            }
+        });
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,27 +140,22 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
+        // enter fullscreen mode (again)
+        hide();
+
         // init battery info
         registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         // start video
-        VideoScreensaverView sv = findViewById(R.id.videoScreensaverView);
-        sv.setErrorListener(new VideoScreensaverView.ErrorListener() {
-            @Override
-            public void error() {
-                show();
-            }
-        });
-        sv.loadSettings();
-        sv.start();
-
-        // enter fullscreen mode (again)
-        hide();
+        mScreensaverView.loadSettings();
+        mScreensaverView.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        mScreensaverView.mMediaPlayer.stop();
 
         // unregister receiver
         unregisterReceiver(this.mBatInfoReceiver);
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context ctxt, Intent intent) {
             int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-            mVideoView.updateBattery(plugged, level);
+            mScreensaverView.updateBattery(plugged, level);
         }
     };
 

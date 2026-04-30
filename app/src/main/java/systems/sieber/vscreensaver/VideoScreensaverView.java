@@ -3,6 +3,7 @@ package systems.sieber.vscreensaver;
 import static systems.sieber.vscreensaver.BaseSettingsActivity.SHARED_PREF_DOMAIN;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,15 +12,16 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
@@ -32,9 +34,11 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VideoScreensaverView extends RelativeLayout {
+public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 
-    VideoView mVideoView;
+    MediaPlayer mMediaPlayer = new MediaPlayer();
+    SurfaceView mVideoView;
+    View mNoVideoWarning;
     TextView mTextViewClock;
     TextView mTextViewDate;
     LinearLayout mLinearLayoutClockDate;
@@ -47,6 +51,7 @@ public class VideoScreensaverView extends RelativeLayout {
 
     boolean mHrs24;
     String mDateFormat;
+    int mColorBackground;
 
     Timer mTimerClock;
 
@@ -66,7 +71,8 @@ public class VideoScreensaverView extends RelativeLayout {
         mSharedPref = getContext().getSharedPreferences(SHARED_PREF_DOMAIN, Context.MODE_PRIVATE);
 
         // find views
-        mVideoView = findViewById(R.id.videoViewMain);
+        mVideoView = findViewById(R.id.surfaceViewMain);
+        mNoVideoWarning = findViewById(R.id.linearLayoutNoVideo);
         mTextViewClock = findViewById(R.id.textViewClock);
         mTextViewDate = findViewById(R.id.textViewDate);
         mLinearLayoutClockDate = findViewById(R.id.linearLayoutClockDate);
@@ -133,43 +139,28 @@ public class VideoScreensaverView extends RelativeLayout {
         mHrs24 = mSharedPref.getBoolean("clock-hrs24", true);
         mDateFormat = mSharedPref.getString("date-format", BaseSettingsActivity.getDefaultDateFormat(getContext()));
 
-        final int colorBackground = mSharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00));
-        this.setBackgroundColor(colorBackground);
+        mColorBackground = mSharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00));
+        setBackgroundColor(mColorBackground);
+        mVideoView.setBackgroundColor(mColorBackground);
 
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        SurfaceHolder sv = mVideoView.getHolder();
+        sv.addCallback(new SurfaceHolder.Callback() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(mSharedPref.getBoolean("video-loop", true));
-                float vol = (float) mSharedPref.getInt("video-volume", 0) / 100;
-                mp.setVolume(vol, vol);
+            public void surfaceCreated(SurfaceHolder holder) {
+                mMediaPlayer.setDisplay(holder);
+            }
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                mMediaPlayer.setDisplay(holder);
+            }
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                mMediaPlayer.setDisplay(null);
             }
         });
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                mVideoView.setBackgroundColor(colorBackground);
-                findViewById(R.id.linearLayoutNoVideo).setVisibility(VISIBLE);
-                if(mErrorListener != null) mErrorListener.error();
-                return true;
-            }
-        });
-        if(mSharedPref.getBoolean("video-stretch", false)) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            params.removeRule(RelativeLayout.CENTER_IN_PARENT);
-            mVideoView.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
-            params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            params.removeRule(RelativeLayout.ALIGN_PARENT_TOP);
-            params.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            params.addRule(RelativeLayout.CENTER_IN_PARENT);
-            mVideoView.setLayoutParams(params);
-        }
+
+        mMediaPlayer.setOnPreparedListener(this);
+        mMediaPlayer.setOnErrorListener(this);
 
         if(mSharedPref.getBoolean("clock", false)) {
             mTextViewClock.setVisibility(VISIBLE);
@@ -229,28 +220,93 @@ public class VideoScreensaverView extends RelativeLayout {
         mTextViewClock.setLayoutParams(paramsc);
     }
 
-    public void start() {
-        switch(mSharedPref.getInt("predefined-video", -1)) {
-            case 0:
-                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_landscape) );
-                break;
-            case 1:
-                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_portrait) );
-                break;
-            case 2:
-                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_landscape) );
-                break;
-            case 3:
-                mVideoView.setVideoURI( Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_portrait) );
-                break;
-            default:
-                StorageControl storage = new StorageControl(getContext());
-                mVideoView.setVideoPath( "file://" + storage.getStorage(StorageControl.FILENAME_VIDEO).getAbsolutePath() );
+    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+        mNoVideoWarning.setVisibility(VISIBLE);
+        mVideoView.setBackgroundColor(mColorBackground);
+        if(mErrorListener != null) mErrorListener.error();
+        return true;
+    }
+
+    public void onPrepared(MediaPlayer mp) {
+        mp.setLooping(mSharedPref.getBoolean("video-loop", true));
+
+        float vol = (float) mSharedPref.getInt("video-volume", 0) / 100;
+        mp.setVolume(vol, vol);
+
+        int videoWidth = mp.getVideoWidth();
+        int videoHeight = mp.getVideoHeight();
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+        int pivotPointX = 0;
+        int pivotPointY = 0;
+        float scaleY = 1.0f;
+        float scaleX = 1.0f;
+        ViewGroup.LayoutParams layoutParams = mVideoView.getLayoutParams();
+
+        if(mSharedPref.getBoolean("video-stretch", false)) {
+            if(((float) screenWidth / screenHeight) < 1) {
+                scaleX = (float) (videoWidth * screenHeight / videoHeight) / screenWidth;
+            } else {
+                scaleY = (float) (videoHeight * screenWidth / videoWidth) / screenHeight;
+            }
+            pivotPointX = screenWidth / 2;
+            pivotPointY = screenHeight / 2;
+            layoutParams.width = screenWidth;
+            layoutParams.height = screenHeight;
+        } else {
+            float ratioWidth = (float) screenWidth / videoWidth;
+            float ratioHeight = (float) screenHeight / videoHeight;
+            float aspectRatio = (float) videoWidth / videoHeight;
+            if(ratioWidth > ratioHeight) {
+                layoutParams.width = (int) (screenHeight * aspectRatio);
+                layoutParams.height = screenHeight;
+            } else {
+                layoutParams.width = screenWidth;
+                layoutParams.height = (int) (screenWidth / aspectRatio);
+            }
         }
-        mVideoView.start();
-        //mVideoView.setZOrderOnTop(true);
-        mVideoView.setBackgroundColor(0);
-        findViewById(R.id.linearLayoutNoVideo).setVisibility(GONE);
+
+        mVideoView.setLayoutParams(layoutParams);
+        mVideoView.setScaleX(scaleX);
+        mVideoView.setScaleY(scaleY);
+        mVideoView.setPivotX(pivotPointX);
+        mVideoView.setPivotY(pivotPointY);
+
+        mp.start();
+    }
+
+    public void start() {
+        try {
+            mMediaPlayer.reset();
+            switch(mSharedPref.getInt("predefined-video", -1)) {
+                case 0:
+                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_landscape) );
+                    break;
+                case 1:
+                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_portrait) );
+                    break;
+                case 2:
+                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_landscape) );
+                    break;
+                case 3:
+                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_portrait) );
+                    break;
+                default:
+                    StorageControl storage = new StorageControl(getContext());
+                    mMediaPlayer.setDataSource( getContext(), Uri.parse("file://" + storage.getStorage(StorageControl.FILENAME_VIDEO).getAbsolutePath()) );
+            }
+            mMediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+            mMediaPlayer.prepareAsync();
+
+            mNoVideoWarning.setVisibility(GONE);
+            mVideoView.setBackgroundColor(0);
+        } catch(Exception e) {
+            e.printStackTrace();
+            if(mErrorListener != null) mErrorListener.error();
+        }
     }
 
     void updateAlarm() {

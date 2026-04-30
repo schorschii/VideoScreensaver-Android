@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <VideoView
-        android:id="@+id/videoViewMain"
+    <SurfaceView
+        android:id="@+id/surfaceViewMain"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
