@@ -2,6 +2,7 @@ release/
 assets/
 
 *.mp4
+*.mkv
 
 *.iml
 .gradle
