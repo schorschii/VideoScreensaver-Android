@@ -13,7 +13,7 @@ import android.view.View;
 
 public class FullscreenDream extends DreamService {
 
-    VideoScreensaverView mContentView;
+    VideoScreensaverView mScreensaverView;
 
     @Override
     public void onAttachedToWindow() {
@@ -29,11 +29,11 @@ public class FullscreenDream extends DreamService {
         setContentView(R.layout.dream_fullscreen);
 
         // find views
-        mContentView = findViewById(R.id.videoScreensaverView);
+        mScreensaverView = findViewById(R.id.videoScreensaverView);
 
         // hide the system navigation bar with the same flags as done in the pre-installed Android clock app
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+            mScreensaverView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -44,13 +44,13 @@ public class FullscreenDream extends DreamService {
     @Override
     public void onDreamingStarted() {
         super.onDreamingStarted();
-        mContentView.start();
+        mScreensaverView.start();
     }
 
     @Override
     public void onDreamingStopped() {
         super.onDreamingStopped();
-        mContentView.mVideoView.stopPlayback();
+        mScreensaverView.mMediaPlayer.stop();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FullscreenDream extends DreamService {
             public void run() {
                 initContentView();
                 //mContentView.resume();
-                mContentView.updateBattery(mBatLastPlugged, mBatLastLevel);
+                mScreensaverView.updateBattery(mBatLastPlugged, mBatLastLevel);
             }
         }, 100);
     }
@@ -88,7 +88,7 @@ public class FullscreenDream extends DreamService {
         public void onReceive(Context ctxt, Intent intent) {
             mBatLastPlugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
             mBatLastLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-            mContentView.updateBattery(mBatLastPlugged, mBatLastLevel);
+            mScreensaverView.updateBattery(mBatLastPlugged, mBatLastLevel);
         }
     };
 
