@@ -28,3 +28,7 @@ Amazon FireOS (on FireTV devices) does currently not officially allow changing t
    # if you want to restore the Amazon default screen saver, execute the following command
    adb shell settings put secure screensaver_components com.amazon.ftv.screensaver/.app.services.ScreensaverService
    ```
+
+## Development
+Note that default videos must be in a format supported down to SDK 17 (H.264 AVC
+Baseline Profile (BP))! See: https://developer.android.com/media/platform/supported-formats
