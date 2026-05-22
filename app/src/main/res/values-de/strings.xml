@@ -9,6 +9,7 @@
     <string name="purchase_support_note">Durch das Freischalten der Einstellungen mit einem In-App-Kauf unterstützen Sie die Weiterentwicklung dieser App ♥</string>
     <string name="review_app_title">Gefällt Ihnen die App? Bitte geben Sie eine Bewertung ab.</string>
     <string name="review_now">Jetzt im Play Store bewerten</string>
+    <string name="check_internet_conn">Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
     <string name="play_store_not_avail">Google Play Store not available</string>
     <string name="amazon_store_not_avail">Amazon App Store not available</string>
     <string name="could_not_fetch_prices">Die aktuellen Preise für In-App-Einkäufe konnten nicht geladen werden.</string>
@@ -82,4 +83,5 @@
     <string name="buy_a_code">Code kaufen</string>
     <string name="unlock_code">Freischaltcode</string>
     <string name="activation_failed">Aktivierung fehlgeschlagen</string>
+    <string name="invalid_code">Ungültiger Code</string>
 </resources>

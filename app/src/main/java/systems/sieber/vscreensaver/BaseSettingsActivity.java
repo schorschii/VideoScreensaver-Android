@@ -46,7 +46,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 
 public class BaseSettingsActivity extends AppCompatActivity {
@@ -560,7 +565,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
             this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appId)));
         }
     }
-    private void infoDialog(String title, String text) {
+    void infoDialog(String title, String text) {
         final AlertDialog.Builder dlg = new AlertDialog.Builder(this);
         if(title != null) dlg.setTitle(title);
         if(text != null) dlg.setMessage(text);
@@ -572,6 +577,33 @@ public class BaseSettingsActivity extends AppCompatActivity {
                 });
         dlg.setCancelable(true);
         dlg.create().show();
+    }
+
+    String checkCode(String feature, String code) throws Exception {
+        try {
+            URL urlGetRequest = new URL(getResources().getString(R.string.unlock_api));
+            HttpURLConnection conn = (HttpURLConnection) urlGetRequest.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("X-Unlock-Feature", feature);
+            conn.setRequestProperty("X-Unlock-Code", code);
+            int statusCode = conn.getResponseCode();
+            conn.disconnect();
+            if(statusCode == 999) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                StringBuffer response = new StringBuffer();
+                String inputLine;
+                while((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                return response.toString();
+            } else {
+                throw new Exception(getString(R.string.invalid_code) + " ("+statusCode+")");
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+            throw new Exception(getString(R.string.check_internet_conn));
+        }
     }
 
 }

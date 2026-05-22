@@ -17,6 +17,7 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="purchase_support_note">By unlocking the settings with an in-app purchase, you support the further development of this app ♥</string>
     <string name="review_app_title">Do you like this app? Please submit a review.</string>
     <string name="review_now">Rate now at the Play Store</string>
+    <string name="check_internet_conn">Please check your internet connection and try again.</string>
     <string name="play_store_not_avail">Google Play Store not available</string>
     <string name="amazon_store_not_avail">Amazon App Store not available</string>
     <string name="could_not_fetch_prices">Could not fetch current prices for in-app purchases.</string>
@@ -90,4 +91,5 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="buy_a_code">Buy a code</string>
     <string name="unlock_code">Unlock Code</string>
     <string name="activation_failed">Activation failed</string>
+    <string name="invalid_code">Invalid code</string>
 </resources>
