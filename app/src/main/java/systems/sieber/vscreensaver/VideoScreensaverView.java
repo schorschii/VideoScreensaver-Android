@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -228,7 +229,8 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         mLinearLayoutBottomBar.setLayoutParams(paramsb);
     }
 
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+    public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+        Log.e("MediaPlayer", "what:"+what+", extra:"+extra);
         mNoVideoWarning.setVisibility(VISIBLE);
         mVideoView.setBackgroundColor(mColorBackground);
         if(mErrorListener != null) mErrorListener.error();
