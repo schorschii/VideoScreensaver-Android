@@ -8,6 +8,11 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1 (htt
 Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License, Version 2.0.
     </string>
 
+    <string name="url_download_aquarium_portrait" translatable="false">"https://georg-sieber.de/download/software/vscreensaver/aquarium_portrait.mkv"</string>
+    <string name="url_download_aquarium_landscape" translatable="false">"https://georg-sieber.de/download/software/vscreensaver/aquarium_landscape.mkv"</string>
+    <string name="url_download_fire_portrait" translatable="false">"https://georg-sieber.de/download/software/vscreensaver/fire_portrait.mkv"</string>
+    <string name="url_download_fire_landscape" translatable="false">"https://georg-sieber.de/download/software/vscreensaver/fire_landscape.mkv"</string>
+
     <string name="app_name">Video Screensaver</string>
     <string name="version">Version</string>
     <string name="settings">Settings</string>
@@ -92,4 +97,8 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="unlock_code">Unlock Code</string>
     <string name="activation_failed">Activation failed</string>
     <string name="invalid_code">Invalid code</string>
+    <string name="downloading">Downloading…</string>
+    <string name="download_success">Video successfully downloaded and selected</string>
+    <string name="error">Error</string>
+    <string name="finished">Finished</string>
 </resources>

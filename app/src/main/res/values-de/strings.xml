@@ -84,4 +84,8 @@
     <string name="unlock_code">Freischaltcode</string>
     <string name="activation_failed">Aktivierung fehlgeschlagen</string>
     <string name="invalid_code">Ungültiger Code</string>
+    <string name="downloading">Download läuft…</string>
+    <string name="download_success">Video wurde erfolgreich heruntergeladen und ausgewählt</string>
+    <string name="error">Fehler</string>
+    <string name="finished">Abgeschlossen</string>
 </resources>

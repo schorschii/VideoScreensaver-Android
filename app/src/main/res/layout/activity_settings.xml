@@ -63,35 +63,82 @@
                 android:layout_height="wrap_content"
                 android:text="@string/general"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-            <RadioGroup
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                    <RadioButton
-                        android:id="@+id/radioButtonFireplaceLandscape"
+                android:layout_height="120dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:textAlignment="center"
                         android:text="@string/fireplace_landscape" />
-                    <RadioButton
-                        android:id="@+id/radioButtonFireplacePortrait"
+                    <ImageButton
+                        android:id="@+id/buttonDownloadFireplaceLandscape"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="@string/fireplace_landscape"
+                        android:src="@drawable/fire_landscape" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:textAlignment="center"
                         android:text="@string/fireplace_portrait" />
-                    <RadioButton
-                        android:id="@+id/radioButtonAquariumLandscape"
+                    <ImageButton
+                        android:id="@+id/buttonDownloadFireplacePortrait"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="@string/fireplace_portrait"
+                        android:src="@drawable/fire_portrait" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:textAlignment="center"
                         android:text="@string/aquarium_landscape" />
-                    <RadioButton
-                        android:id="@+id/radioButtonAquariumPortrait"
+                    <ImageButton
+                        android:id="@+id/buttonDownloadAquariumLandscape"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="@string/aquarium_landscape"
+                        android:src="@drawable/aquarium_landscape" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:textAlignment="center"
                         android:text="@string/aquarium_portrait" />
-            </RadioGroup>
+                    <ImageButton
+                        android:id="@+id/buttonDownloadAquariumPortrait"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="@string/aquarium_portrait"
+                        android:src="@drawable/aquarium_portrait" />
+                </LinearLayout>
+            </LinearLayout>
             <Button
                 android:id="@+id/buttonSelectVideo"
                 style="@style/Widget.AppCompat.Button.Colored"

@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -56,6 +57,8 @@ import java.text.SimpleDateFormat;
 
 public class BaseSettingsActivity extends AppCompatActivity {
 
+    BaseSettingsActivity baseMe = this;
+
     static final String SHARED_PREF_DOMAIN = "SCREENSAVER";
     SharedPreferences mSharedPref;
 
@@ -76,10 +79,11 @@ public class BaseSettingsActivity extends AppCompatActivity {
     RadioButton mRadioButtonLeft;
     RadioButton mRadioButtonRight;
     RadioButton mRadioButtonCenterX;
-    RadioButton mRadioButtonFireplaceLandscape;
-    RadioButton mRadioButtonFireplacePortrait;
-    RadioButton mRadioButtonAquariumLandscape;
-    RadioButton mRadioButtonAquariumPortrait;
+    Button mButtonSelectVideo;
+    ImageButton mButtonDownloadFireplaceLandscape;
+    ImageButton mButtonDownloadFireplacePortrait;
+    ImageButton mButtonDownloadAquariumLandscape;
+    ImageButton mButtonDownloadAquariumPortrait;
     Button mButtonUnlockSettings;
     LinearLayout mLinearLayoutPurchaseContainer;
     CheckBox mCheckBoxShowBatteryInfo;
@@ -158,16 +162,47 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mRadioButtonLeft = findViewById(R.id.radioButtonLeft);
         mRadioButtonRight = findViewById(R.id.radioButtonRight);
         mRadioButtonCenterX = findViewById(R.id.radioButtonCenterX);
-        mRadioButtonFireplaceLandscape = findViewById(R.id.radioButtonFireplaceLandscape);
-        mRadioButtonFireplacePortrait = findViewById(R.id.radioButtonFireplacePortrait);
-        mRadioButtonAquariumLandscape = findViewById(R.id.radioButtonAquariumLandscape);
-        mRadioButtonAquariumPortrait = findViewById(R.id.radioButtonAquariumPortrait);
+        mButtonSelectVideo = findViewById(R.id.buttonSelectVideo);
+        mButtonDownloadFireplaceLandscape = findViewById(R.id.buttonDownloadFireplaceLandscape);
+        mButtonDownloadFireplacePortrait = findViewById(R.id.buttonDownloadFireplacePortrait);
+        mButtonDownloadAquariumLandscape = findViewById(R.id.buttonDownloadAquariumLandscape);
+        mButtonDownloadAquariumPortrait = findViewById(R.id.buttonDownloadAquariumPortrait);
         mButtonUnlockSettings = findViewById(R.id.buttonUnlockSettings);
         mLinearLayoutPurchaseContainer = findViewById(R.id.linearLayoutInAppPurchase);
         mCheckBoxShowBatteryInfo = findViewById(R.id.checkBoxShowBatteryInfo);
         mCheckBoxShowBatteryInfoWhenCharging = findViewById(R.id.checkBoxShowBatteryInfoWhenCharging);
         mCheckBoxShowAlarms = findViewById(R.id.checkBoxShowAlarms);
         loadSettings();
+
+        // add actions
+        mButtonDownloadFireplaceLandscape.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Download d = new Download(baseMe, null);
+                d.download(getString(R.string.url_download_fire_landscape), StorageControl.FILENAME_VIDEO, true);
+            }
+        });
+        mButtonDownloadFireplacePortrait.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Download d = new Download(baseMe, null);
+                d.download(getString(R.string.url_download_fire_portrait), StorageControl.FILENAME_VIDEO, true);
+            }
+        });
+        mButtonDownloadAquariumLandscape.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Download d = new Download(baseMe, null);
+                d.download(getString(R.string.url_download_aquarium_landscape), StorageControl.FILENAME_VIDEO, true);
+            }
+        });
+        mButtonDownloadAquariumPortrait.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Download d = new Download(baseMe, null);
+                d.download(getString(R.string.url_download_aquarium_portrait), StorageControl.FILENAME_VIDEO, true);
+            }
+        });
 
         // init color picker
         mViewColorChangerBackground.setOnClickListener(new View.OnClickListener() {
@@ -364,11 +399,6 @@ public class BaseSettingsActivity extends AppCompatActivity {
 
         StorageControl storage = new StorageControl(this);
         storage.processFile(StorageControl.FILENAME_VIDEO, data);
-        mRadioButtonFireplaceLandscape.setChecked(false);
-        mRadioButtonFireplacePortrait.setChecked(false);
-        mRadioButtonAquariumLandscape.setChecked(false);
-        mRadioButtonAquariumPortrait.setChecked(false);
-
     }
 
     private void loadSettings() {
@@ -400,16 +430,6 @@ public class BaseSettingsActivity extends AppCompatActivity {
             case 2:
                 mRadioButtonCenterY.setChecked(true); break;
         }
-        switch(mSharedPref.getInt("predefined-video", -1)) {
-            case 0:
-                mRadioButtonFireplaceLandscape.setChecked(true); break;
-            case 1:
-                mRadioButtonFireplacePortrait.setChecked(true); break;
-            case 2:
-                mRadioButtonAquariumLandscape.setChecked(true); break;
-            case 3:
-                mRadioButtonAquariumPortrait.setChecked(true); break;
-        }
     }
 
     private void saveSettings() {
@@ -425,13 +445,6 @@ public class BaseSettingsActivity extends AppCompatActivity {
         edit.putString("date-format", mEditTextDateFormat.getText().toString());
         edit.putInt("clock-position-x", mRadioButtonLeft.isChecked() ? 0 : mRadioButtonRight.isChecked() ? 1 : 2);
         edit.putInt("clock-position-y", mRadioButtonTop.isChecked() ? 0 : mRadioButtonBottom.isChecked() ? 1 : 2);
-        edit.putInt("predefined-video",
-                mRadioButtonFireplaceLandscape.isChecked() ? 0
-                        : mRadioButtonFireplacePortrait.isChecked() ? 1
-                        : mRadioButtonAquariumLandscape.isChecked() ? 2
-                        : mRadioButtonAquariumPortrait.isChecked() ? 3
-                        : -1
-        );
         edit.putBoolean("show-battery-info", mCheckBoxShowBatteryInfo.isChecked());
         edit.putBoolean("show-battery-info-when-charging", mCheckBoxShowBatteryInfoWhenCharging.isChecked());
         edit.putBoolean("show-alarms", mCheckBoxShowAlarms.isChecked());

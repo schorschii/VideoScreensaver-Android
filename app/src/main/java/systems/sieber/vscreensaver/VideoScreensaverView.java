@@ -29,6 +29,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -291,23 +292,39 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
     public void start() {
         try {
             mMediaPlayer.reset();
-            switch(mSharedPref.getInt("predefined-video", -1)) {
-                case 0:
-                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_landscape) );
-                    break;
-                case 1:
-                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.fire_portrait) );
-                    break;
-                case 2:
-                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_landscape) );
-                    break;
-                case 3:
-                    mMediaPlayer.setDataSource( getContext(), Uri.parse("android.resource://systems.sieber.vscreensaver/" + R.raw.aquarium_portrait) );
-                    break;
-                default:
-                    StorageControl storage = new StorageControl(getContext());
-                    mMediaPlayer.setDataSource( getContext(), Uri.parse("file://" + storage.getStorage(StorageControl.FILENAME_VIDEO).getAbsolutePath()) );
+
+            StorageControl storage = new StorageControl(getContext());
+            File fileCustomVideo = storage.getStorage(StorageControl.FILENAME_VIDEO);
+            if(fileCustomVideo.isFile()) {
+                mMediaPlayer.setDataSource( getContext(), Uri.parse("file://" + fileCustomVideo.getAbsolutePath()) );
+            } else {
+                Download d = new Download(getContext(), new Download.DownloadFinishedListener() {
+                    @Override
+                    public void finished(boolean success) {
+                        if(!success) return;
+                        start();
+                        SharedPreferences.Editor edit = mSharedPref.edit();
+                        edit.remove("predefined-video");
+                        edit.apply();
+                    }
+                });
+                switch(mSharedPref.getInt("predefined-video", -1)) {
+                    case 0:
+                        d.download(getContext().getString(R.string.url_download_fire_landscape), StorageControl.FILENAME_VIDEO, false);
+                        break;
+                    case 1:
+                        d.download(getContext().getString(R.string.url_download_fire_portrait), StorageControl.FILENAME_VIDEO, false);
+                        break;
+                    case 2:
+                        d.download(getContext().getString(R.string.url_download_aquarium_landscape), StorageControl.FILENAME_VIDEO, false);
+                        break;
+                    case 3:
+                        d.download(getContext().getString(R.string.url_download_aquarium_portrait), StorageControl.FILENAME_VIDEO, false);
+                        break;
+                }
+                return;
             }
+
             mMediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mMediaPlayer.prepareAsync();
 
