@@ -3,4 +3,5 @@
     <color name="primary">#4FAA5E</color>
     <color name="settingsCheckBoxes">#222</color>
     <color name="previewBorder">#757575</color> <!-- should look like checkboxes -->
+    <color name="errorText">#B3B3B3</color>
 </resources>
