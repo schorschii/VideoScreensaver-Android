@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.UiModeManager;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +70,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
     View mViewColorChangerClock;
     View mViewClockColorPreview;
     CheckBox mCheckBoxLoop;
+    CheckBox mCheckBoxRandom;
     CheckBox mCheckBoxStretch;
     SeekBar mSeekBarVolume;
     CheckBox mCheckBoxClock;
@@ -151,6 +154,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mViewColorChangerClock = findViewById(R.id.viewColorChangerClock);
         mViewClockColorPreview = findViewById(R.id.viewColorPreviewClock);
         mCheckBoxLoop = findViewById(R.id.checkBoxLoop);
+        mCheckBoxRandom = findViewById(R.id.checkBoxRandom);
         mCheckBoxStretch = findViewById(R.id.checkBoxStretch);
         mSeekBarVolume = findViewById(R.id.seekBarVolume);
         mCheckBoxClock = findViewById(R.id.checkBoxClock);
@@ -392,6 +396,9 @@ public class BaseSettingsActivity extends AppCompatActivity {
     public void onClickSelectVideo(View v) {
         Intent intent = new Intent();
         intent.setType("video/*");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         } else {
@@ -403,14 +410,26 @@ public class BaseSettingsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data == null || data.getData() == null) return;
+        if(data == null) return;
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mVideoUris = data.getData().toString();
+            mVideoUris = "";
             try {
                 final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
-                getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+                ClipData clipData = data.getClipData();
+                if(clipData != null) {
+                    for(int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item path = clipData.getItemAt(i);
+                        getContentResolver().takePersistableUriPermission(path.getUri(), takeFlags);
+                        mVideoUris += path.getUri().toString() + "\n";
+                    }
+                } else if(data.getData() != null) {
+                    getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+                    mVideoUris += data.getData().toString();
+                }
+                Log.i("video", mVideoUris);
             } catch(Exception e) {
+                e.printStackTrace();
                 // fallback: copy video into private app dir if persistable permission failed
                 copyVideo(data);
                 mVideoUris = "";
@@ -421,6 +440,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         }
     }
     private void copyVideo(Intent data) {
+        Log.w("video", "fallback: copy video into app dir");
         StorageControl storage = new StorageControl(this);
         storage.processFile(StorageControl.FILENAME_VIDEO, data);
     }
@@ -430,6 +450,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mViewBackgroundColorPreview.setBackgroundColor( mSharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00)) );
         mViewClockColorPreview.setBackgroundColor( mSharedPref.getInt("color-clock", Color.argb(0xff, 0xff, 0xff, 0xff)) );
         mCheckBoxLoop.setChecked( mSharedPref.getBoolean("video-loop", true) );
+        mCheckBoxRandom.setChecked( mSharedPref.getBoolean("video-random", false) );
         mCheckBoxStretch.setChecked( mSharedPref.getBoolean("video-stretch", false) );
         mSeekBarVolume.setProgress( mSharedPref.getInt("video-volume", 0) );
         mCheckBoxClock.setChecked( mSharedPref.getBoolean("clock", false) );
@@ -463,6 +484,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         edit.putInt("color-background", ((ColorDrawable)mViewBackgroundColorPreview.getBackground()).getColor());
         edit.putInt("color-clock", ((ColorDrawable)mViewClockColorPreview.getBackground()).getColor());
         edit.putBoolean("video-loop", mCheckBoxLoop.isChecked());
+        edit.putBoolean("video-random", mCheckBoxRandom.isChecked());
         edit.putBoolean("video-stretch", mCheckBoxStretch.isChecked());
         edit.putInt("video-volume", mSeekBarVolume.getProgress());
         edit.putBoolean("clock", mCheckBoxClock.isChecked());
@@ -486,6 +508,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
     protected void enableDisableAllSettings(boolean state) {
         mViewColorChangerBackground.setEnabled(state);
         mCheckBoxLoop.setEnabled(state);
+        mCheckBoxRandom.setEnabled(state);
         mCheckBoxStretch.setEnabled(state);
         mCheckBoxClock.setEnabled(state);
         mCheckBoxHrs24.setEnabled(state);

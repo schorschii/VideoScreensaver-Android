@@ -31,12 +31,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
     MediaPlayer mMediaPlayer = new MediaPlayer();
     SurfaceView mVideoView;
@@ -57,7 +59,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
     int mColorBackground;
 
     Timer mTimerClock;
-
+    Random mRandom;
     SharedPreferences mSharedPref;
 
     private ErrorListener mErrorListener = null;
@@ -72,6 +74,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         super(c, attrs);
         inflate(getContext(), R.layout.view_screensaver, this);
         mSharedPref = getContext().getSharedPreferences(SHARED_PREF_DOMAIN, Context.MODE_PRIVATE);
+        mRandom = new Random();
 
         // find views
         mVideoView = findViewById(R.id.surfaceViewMain);
@@ -165,6 +168,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
 
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnErrorListener(this);
+        mMediaPlayer.setOnCompletionListener(this);
 
         if(mSharedPref.getBoolean("clock", false)) {
             mTextViewClock.setVisibility(VISIBLE);
@@ -230,6 +234,22 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         mLinearLayoutBottomBar.setLayoutParams(paramsb);
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if(!mVideoUris.isEmpty() && mSharedPref.getBoolean("video-random", false)) {
+            mPlaylistIndex = mRandom.nextInt(mVideoUris.size());
+        } else {
+            mPlaylistIndex += 1;
+        }
+        if(mPlaylistIndex >= mVideoUris.size()) {
+            mPlaylistIndex = 0;
+            if(!mSharedPref.getBoolean("video-loop", true)) {
+                return;
+            }
+        }
+        forward();
+    }
+
     public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
         Log.e("MediaPlayer", "what:"+what+", extra:"+extra);
         mNoVideoWarning.setVisibility(VISIBLE);
@@ -239,8 +259,6 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
     }
 
     public void onPrepared(MediaPlayer mp) {
-        mp.setLooping(mSharedPref.getBoolean("video-loop", true));
-
         float vol = (float) mSharedPref.getInt("video-volume", 0) / 100;
         mp.setVolume(vol, vol);
 
@@ -289,17 +307,38 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         mp.start();
     }
 
+    private ArrayList<String> getVideoUris() {
+        ArrayList<String> strUris = new ArrayList<>();
+        for(String strUri : mSharedPref.getString("videos", "").split("\n")) {
+            if(!strUri.isBlank()) strUris.add(strUri);
+        }
+        return strUris;
+    }
+
+    ArrayList<String> mVideoUris;
+    int mPlaylistIndex = 0;
     public void start() {
+        mVideoUris = getVideoUris();
+        if(!mVideoUris.isEmpty() && mSharedPref.getBoolean("video-random", false)) {
+            mPlaylistIndex = mRandom.nextInt(mVideoUris.size());
+        } else {
+            mPlaylistIndex = 0;
+        }
+        forward();
+    }
+    private void forward() {
         try {
             mMediaPlayer.reset();
 
             StorageControl storage = new StorageControl(getContext());
             File fileCustomVideo = storage.getStorage(StorageControl.FILENAME_VIDEO);
-            String videoUris = mSharedPref.getString("videos", "");
-            if(!videoUris.isEmpty()) {
-                mMediaPlayer.setDataSource(  getContext(), Uri.parse(videoUris) );
+
+            if(!mVideoUris.isEmpty()) {
+                mMediaPlayer.setDataSource( getContext(), Uri.parse(mVideoUris.get(mPlaylistIndex)) );
+
             } else if(fileCustomVideo.isFile()) {
                 mMediaPlayer.setDataSource( getContext(), Uri.parse("file://" + fileCustomVideo.getAbsolutePath()) );
+
             } else {
                 Download d = new Download(getContext(), new Download.DownloadFinishedListener() {
                     @Override
