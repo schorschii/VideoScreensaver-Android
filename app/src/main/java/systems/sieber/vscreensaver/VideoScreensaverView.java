@@ -301,11 +301,14 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
                 Download d = new Download(getContext(), new Download.DownloadFinishedListener() {
                     @Override
                     public void finished(boolean success) {
-                        if(!success) return;
-                        start();
-                        SharedPreferences.Editor edit = mSharedPref.edit();
-                        edit.remove("predefined-video");
-                        edit.apply();
+                        if(success) {
+                            start();
+                            SharedPreferences.Editor edit = mSharedPref.edit();
+                            edit.remove("predefined-video");
+                            edit.apply();
+                        } else {
+                            if(mErrorListener != null) mErrorListener.error();
+                        }
                     }
                 });
                 switch(mSharedPref.getInt("predefined-video", -1)) {
