@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,9 +51,9 @@ public class Download {
         if(title != null) dlg.setTitle(title);
         if(text != null) dlg.setMessage(text);
         if(success)
-            dlg.setIcon(ContextCompat.getDrawable(mContext, R.drawable.ic_tick_green_24dp));
+            dlg.setIcon(AppCompatResources.getDrawable(mContext, R.drawable.ic_tick_green_24dp));
         else
-            dlg.setIcon(ContextCompat.getDrawable(mContext, R.drawable.ic_fail_red_36dp));
+            dlg.setIcon(AppCompatResources.getDrawable(mContext, R.drawable.ic_fail_red_36dp));
         dlg.setPositiveButton(mContext.getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
