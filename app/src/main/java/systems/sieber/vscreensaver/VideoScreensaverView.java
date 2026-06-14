@@ -295,7 +295,10 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
 
             StorageControl storage = new StorageControl(getContext());
             File fileCustomVideo = storage.getStorage(StorageControl.FILENAME_VIDEO);
-            if(fileCustomVideo.isFile()) {
+            String videoUris = mSharedPref.getString("videos", "");
+            if(!videoUris.isEmpty()) {
+                mMediaPlayer.setDataSource(  getContext(), Uri.parse(videoUris) );
+            } else if(fileCustomVideo.isFile()) {
                 mMediaPlayer.setDataSource( getContext(), Uri.parse("file://" + fileCustomVideo.getAbsolutePath()) );
             } else {
                 Download d = new Download(getContext(), new Download.DownloadFinishedListener() {

@@ -62,6 +62,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
     static final String SHARED_PREF_DOMAIN = "SCREENSAVER";
     SharedPreferences mSharedPref;
 
+    String mVideoUris = null;
     View mViewColorChangerBackground;
     View mViewBackgroundColorPreview;
     View mViewColorChangerClock;
@@ -175,31 +176,34 @@ public class BaseSettingsActivity extends AppCompatActivity {
         loadSettings();
 
         // add actions
+        Download d = new Download(baseMe, new Download.DownloadFinishedListener() {
+            @Override
+            public void finished(boolean success) {
+                mVideoUris = "";
+                saveSettings();
+            }
+        });
         mButtonDownloadFireplaceLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Download d = new Download(baseMe, null);
                 d.download(getString(R.string.url_download_fire_landscape), StorageControl.FILENAME_VIDEO, true);
             }
         });
         mButtonDownloadFireplacePortrait.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Download d = new Download(baseMe, null);
                 d.download(getString(R.string.url_download_fire_portrait), StorageControl.FILENAME_VIDEO, true);
             }
         });
         mButtonDownloadAquariumLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Download d = new Download(baseMe, null);
                 d.download(getString(R.string.url_download_aquarium_landscape), StorageControl.FILENAME_VIDEO, true);
             }
         });
         mButtonDownloadAquariumPortrait.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Download d = new Download(baseMe, null);
                 d.download(getString(R.string.url_download_aquarium_portrait), StorageControl.FILENAME_VIDEO, true);
             }
         });
@@ -388,7 +392,11 @@ public class BaseSettingsActivity extends AppCompatActivity {
     public void onClickSelectVideo(View v) {
         Intent intent = new Intent();
         intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        } else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        }
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_own_video)), 1);
     }
 
@@ -397,11 +405,28 @@ public class BaseSettingsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(data == null || data.getData() == null) return;
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mVideoUris = data.getData().toString();
+            try {
+                final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+                getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+            } catch(Exception e) {
+                // fallback: copy video into private app dir if persistable permission failed
+                copyVideo(data);
+                mVideoUris = "";
+            }
+        } else {
+            copyVideo(data);
+            mVideoUris = "";
+        }
+    }
+    private void copyVideo(Intent data) {
         StorageControl storage = new StorageControl(this);
         storage.processFile(StorageControl.FILENAME_VIDEO, data);
     }
 
     private void loadSettings() {
+        mVideoUris = mSharedPref.getString("videos", "");
         mViewBackgroundColorPreview.setBackgroundColor( mSharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00)) );
         mViewClockColorPreview.setBackgroundColor( mSharedPref.getInt("color-clock", Color.argb(0xff, 0xff, 0xff, 0xff)) );
         mCheckBoxLoop.setChecked( mSharedPref.getBoolean("video-loop", true) );
@@ -434,6 +459,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
 
     private void saveSettings() {
         SharedPreferences.Editor edit = mSharedPref.edit();
+        edit.putString("videos", mVideoUris);
         edit.putInt("color-background", ((ColorDrawable)mViewBackgroundColorPreview.getBackground()).getColor());
         edit.putInt("color-clock", ((ColorDrawable)mViewClockColorPreview.getBackground()).getColor());
         edit.putBoolean("video-loop", mCheckBoxLoop.isChecked());
