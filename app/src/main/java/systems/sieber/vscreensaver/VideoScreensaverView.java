@@ -324,6 +324,8 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
                     case 3:
                         d.download(getContext().getString(R.string.url_download_aquarium_portrait), StorageControl.FILENAME_VIDEO, false);
                         break;
+                    default:
+                        throw new Exception();
                 }
                 return;
             }

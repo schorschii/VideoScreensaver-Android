@@ -28,6 +28,10 @@ import android.view.View;
 
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+
+    private View mControlsView;
+    private FloatingActionButton mFabSettings;
     private View mContentView;
     private VideoScreensaverView mScreensaverView;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -51,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -103,15 +111,18 @@ public class MainActivity extends AppCompatActivity {
 
         // find views
         mControlsView = findViewById(R.id.linearLayoutControls);
+        mFabSettings = findViewById(R.id.fab);
         mContentView = findViewById(R.id.rootView);
         mScreensaverView = findViewById(R.id.videoScreensaverView);
         mScreensaverView.setErrorListener(new VideoScreensaverView.ErrorListener() {
             @Override
             public void error() {
                 show();
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.settings_blink);
+                mFabSettings.startAnimation(animation);
             }
         });
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+        mFabSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openSettings(null);
