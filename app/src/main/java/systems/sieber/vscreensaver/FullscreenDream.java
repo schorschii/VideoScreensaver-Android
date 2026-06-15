@@ -67,15 +67,22 @@ public class FullscreenDream extends DreamService {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        // stop the current player before destroying the old view
+        if(mScreensaverView != null) {
+            try {
+                mScreensaverView.mMediaPlayer.stop();
+            } catch(Exception ignored) {}
+        }
+
         // re-init the content view
         // this is a really annoying Android bug: when rotating in screensaver mode,
-        // the view_fsclock layout is broken / not automatically updated to landscape
+        // the view is broken / not automatically updated to landscape
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 initContentView();
-                //mContentView.resume();
+                mScreensaverView.start();
                 mScreensaverView.updateBattery(mBatLastPlugged, mBatLastLevel);
             }
         }, 100);
