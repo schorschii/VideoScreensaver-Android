@@ -414,8 +414,19 @@ public class BaseSettingsActivity extends AppCompatActivity {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mVideoUris = "";
+            final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
+            // try to revoke previous PersistableUriPermission (there is a limit of 512 max)
             try {
-                final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+                for(String s : VideoScreensaverView.getVideoUris(mSharedPref)) {
+                    getContentResolver().releasePersistableUriPermission(Uri.parse(s), takeFlags);
+                    Log.i("video", "released "+s);
+                }
+            } catch(Exception e) {
+                Log.e("video", "unable to release PersistableUriPermission: "+e.getMessage());
+            }
+
+            try {
                 ClipData clipData = data.getClipData();
                 if(clipData != null) {
                     for(int i = 0; i < clipData.getItemCount(); i++) {

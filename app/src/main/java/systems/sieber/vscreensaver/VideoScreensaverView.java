@@ -307,9 +307,9 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
         mp.start();
     }
 
-    private ArrayList<String> getVideoUris() {
+    static ArrayList<String> getVideoUris(SharedPreferences sharedPref) {
         ArrayList<String> strUris = new ArrayList<>();
-        for(String strUri : mSharedPref.getString("videos", "").split("\n")) {
+        for(String strUri : sharedPref.getString("videos", "").split("\n")) {
             if(!strUri.isBlank()) strUris.add(strUri);
         }
         return strUris;
@@ -318,7 +318,7 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
     ArrayList<String> mVideoUris;
     int mPlaylistIndex = 0;
     public void start() {
-        mVideoUris = getVideoUris();
+        mVideoUris = getVideoUris(mSharedPref);
         if(!mVideoUris.isEmpty() && mSharedPref.getBoolean("video-random", false)) {
             mPlaylistIndex = mRandom.nextInt(mVideoUris.size());
         } else {
