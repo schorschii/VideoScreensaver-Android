@@ -356,7 +356,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
             try {
                 startActivity(new Intent(Settings.ACTION_DREAM_SETTINGS));
             } catch(ActivityNotFoundException e) {
-                Toast.makeText(this, getString(R.string.screensaver_not_supported), Toast.LENGTH_SHORT);
+                infoDialog(null, getString(R.string.screensaver_not_supported));
             }
         }
     }
