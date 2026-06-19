@@ -66,78 +66,128 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="120dp">
-                <LinearLayout
+                <GridLayout
+                    android:id="@+id/buttonDownloadFireplaceLandscape"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:padding="5dp"
+                    android:contentDescription="@string/fireplace_landscape"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:text="@string/fireplace_landscape" />
-                    <ImageButton
-                        android:id="@+id/buttonDownloadFireplaceLandscape"
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/fireplace_landscape"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:layout_row="1"
+                        android:layout_column="0"
                         android:src="@drawable/fire_landscape" />
-                </LinearLayout>
-                <LinearLayout
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:padding="25dp"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:src="@drawable/baseline_download_24" />
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/buttonDownloadFireplacePortrait"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:padding="5dp"
+                    android:text="@string/fireplace_portrait"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:text="@string/fireplace_portrait" />
-                    <ImageButton
-                        android:id="@+id/buttonDownloadFireplacePortrait"
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/fireplace_portrait"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:layout_row="1"
+                        android:layout_column="0"
                         android:src="@drawable/fire_portrait" />
-                </LinearLayout>
-                <LinearLayout
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:padding="25dp"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:src="@drawable/baseline_download_24" />
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/buttonDownloadAquariumLandscape"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:padding="5dp"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:text="@string/aquarium_landscape" />
-                    <ImageButton
-                        android:id="@+id/buttonDownloadAquariumLandscape"
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/aquarium_landscape"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:layout_row="1"
+                        android:layout_column="0"
                         android:src="@drawable/aquarium_landscape" />
-                </LinearLayout>
-                <LinearLayout
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:padding="25dp"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:src="@drawable/baseline_download_24" />
+                </GridLayout>
+                <GridLayout
+                    android:id="@+id/buttonDownloadAquariumPortrait"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:padding="5dp"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:text="@string/aquarium_portrait" />
-                    <ImageButton
-                        android:id="@+id/buttonDownloadAquariumPortrait"
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/aquarium_portrait"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:layout_row="1"
+                        android:layout_column="0"
                         android:src="@drawable/aquarium_portrait" />
-                </LinearLayout>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="fill_vertical"
+                        android:padding="25dp"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:src="@drawable/baseline_download_24" />
+                </GridLayout>
             </LinearLayout>
             <Button
                 android:id="@+id/buttonSelectVideo"

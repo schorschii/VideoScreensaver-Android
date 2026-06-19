@@ -39,7 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -85,10 +84,10 @@ public class BaseSettingsActivity extends AppCompatActivity {
     RadioButton mRadioButtonRight;
     RadioButton mRadioButtonCenterX;
     Button mButtonSelectVideo;
-    ImageButton mButtonDownloadFireplaceLandscape;
-    ImageButton mButtonDownloadFireplacePortrait;
-    ImageButton mButtonDownloadAquariumLandscape;
-    ImageButton mButtonDownloadAquariumPortrait;
+    View mButtonDownloadFireplaceLandscape;
+    View mButtonDownloadFireplacePortrait;
+    View mButtonDownloadAquariumLandscape;
+    View mButtonDownloadAquariumPortrait;
     Button mButtonUnlockSettings;
     LinearLayout mLinearLayoutPurchaseContainer;
     CheckBox mCheckBoxShowBatteryInfo;
