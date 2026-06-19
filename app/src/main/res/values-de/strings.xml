@@ -17,6 +17,7 @@
     <string name="screensaver_not_supported">Dieses Gerät unterstützt keine Bildschirmschoner.</string>
     <string name="select_own_video">Eigenes Video auswählen</string>
     <string name="background_color">Hintergrundfarbe</string>
+    <string name="keep_screen_on">Bildschirm eingeschaltet lassen</string>
     <string name="loop">Wiederholen</string>
     <string name="random">Zufällig (wenn mehrere ausgewählt)</string>
     <string name="stretch_video">Video strecken</string>

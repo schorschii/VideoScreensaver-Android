@@ -30,6 +30,7 @@ Roboto Font Copyright (c) Christian Robertson. Licensed under the Apache License
     <string name="screensaver_not_supported">This device does not support Android screensavers.</string>
     <string name="select_own_video">Select own Video</string>
     <string name="background_color">Background Color</string>
+    <string name="keep_screen_on">Keep Screen On</string>
     <string name="loop">Loop</string>
     <string name="random">Random (if multiple selected)</string>
     <string name="stretch_video">Stretch Video</string>

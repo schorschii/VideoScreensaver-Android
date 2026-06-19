@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         mFabSettings = findViewById(R.id.fab);
         mContentView = findViewById(R.id.rootView);
         mScreensaverView = findViewById(R.id.videoScreensaverView);
+        mScreensaverView.mActivity = this;
         mScreensaverView.setErrorListener(new VideoScreensaverView.ErrorListener() {
             @Override
             public void error() {

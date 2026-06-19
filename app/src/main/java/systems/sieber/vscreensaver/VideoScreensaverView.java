@@ -19,11 +19,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -40,6 +42,7 @@ import java.util.TimerTask;
 
 public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
+    AppCompatActivity mActivity;
     MediaPlayer mMediaPlayer = new MediaPlayer();
     SurfaceView mVideoView;
     View mNoVideoWarning;
@@ -143,6 +146,16 @@ public class VideoScreensaverView extends RelativeLayout implements MediaPlayer.
     }
 
     public void loadSettings() {
+        if(mActivity != null) {
+            if(mSharedPref.getBoolean("keep-screen-on", true)) {
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                Log.i("SCREEN", "Keep ON");
+            } else {
+                mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                Log.i("SCREEN", "Keep OFF");
+            }
+        }
+
         mHrs24 = mSharedPref.getBoolean("clock-hrs24", true);
         mDateFormat = mSharedPref.getString("date-format", BaseSettingsActivity.getDefaultDateFormat(getContext()));
 

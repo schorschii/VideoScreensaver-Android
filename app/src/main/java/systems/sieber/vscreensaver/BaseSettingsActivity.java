@@ -69,6 +69,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
     View mViewBackgroundColorPreview;
     View mViewColorChangerClock;
     View mViewClockColorPreview;
+    CheckBox mCheckBoxKeepScreenOn;
     CheckBox mCheckBoxLoop;
     CheckBox mCheckBoxRandom;
     CheckBox mCheckBoxStretch;
@@ -153,6 +154,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mViewBackgroundColorPreview = findViewById(R.id.viewColorPreviewBackground);
         mViewColorChangerClock = findViewById(R.id.viewColorChangerClock);
         mViewClockColorPreview = findViewById(R.id.viewColorPreviewClock);
+        mCheckBoxKeepScreenOn = findViewById(R.id.checkBoxKeepScreenOn);
         mCheckBoxLoop = findViewById(R.id.checkBoxLoop);
         mCheckBoxRandom = findViewById(R.id.checkBoxRandom);
         mCheckBoxStretch = findViewById(R.id.checkBoxStretch);
@@ -460,6 +462,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         mVideoUris = mSharedPref.getString("videos", "");
         mViewBackgroundColorPreview.setBackgroundColor( mSharedPref.getInt("color-background", Color.argb(0xff, 0x00, 0x00, 0x00)) );
         mViewClockColorPreview.setBackgroundColor( mSharedPref.getInt("color-clock", Color.argb(0xff, 0xff, 0xff, 0xff)) );
+        mCheckBoxKeepScreenOn.setChecked( mSharedPref.getBoolean("keep-screen-on", true) );
         mCheckBoxLoop.setChecked( mSharedPref.getBoolean("video-loop", true) );
         mCheckBoxRandom.setChecked( mSharedPref.getBoolean("video-random", false) );
         mCheckBoxStretch.setChecked( mSharedPref.getBoolean("video-stretch", false) );
@@ -494,6 +497,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
         edit.putString("videos", mVideoUris);
         edit.putInt("color-background", ((ColorDrawable)mViewBackgroundColorPreview.getBackground()).getColor());
         edit.putInt("color-clock", ((ColorDrawable)mViewClockColorPreview.getBackground()).getColor());
+        edit.putBoolean("keep-screen-on", mCheckBoxKeepScreenOn.isChecked());
         edit.putBoolean("video-loop", mCheckBoxLoop.isChecked());
         edit.putBoolean("video-random", mCheckBoxRandom.isChecked());
         edit.putBoolean("video-stretch", mCheckBoxStretch.isChecked());
@@ -518,6 +522,7 @@ public class BaseSettingsActivity extends AppCompatActivity {
 
     protected void enableDisableAllSettings(boolean state) {
         mViewColorChangerBackground.setEnabled(state);
+        mCheckBoxKeepScreenOn.setEnabled(state);
         mCheckBoxLoop.setEnabled(state);
         mCheckBoxRandom.setEnabled(state);
         mCheckBoxStretch.setEnabled(state);
