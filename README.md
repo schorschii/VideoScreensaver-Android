@@ -1,5 +1,6 @@
 # Android Video Screensaver
 [![Play Store](.github/playstore-badge.svg)](https://play.google.com/store/apps/details?id=systems.sieber.vscreensaver)
+[![F-Droid](.github/fdroid-badge.svg)](https://f-droid.org/packages/systems.sieber.vscreensaver)
 [![APK Download](.github/apk-badge.svg)](https://github.com/schorschii/VideoScreensaver-Android/releases)
 
 With this app, you can display any video as Android screensaver. In addition, you can add a digital clock and the date.
@@ -23,7 +24,7 @@ Amazon FireOS (on FireTV devices) does currently not officially allow changing t
    ```
    # execute this command to set this app as screensaver
    # please note: after that, the FireTV settings app still shows the Amazon screensaver, but the underlying Android system will now start the clock instead
-   adb shell settings put secure screensaver_components systems.sieber.fsclock/systems.sieber.fsclock.FullscreenDream
+   adb shell settings put secure screensaver_components systems.sieber.vscreensaver/systems.sieber.vscreensaver.FullscreenDream
 
    # if you want to restore the Amazon default screen saver, execute the following command
    adb shell settings put secure screensaver_components com.amazon.ftv.screensaver/.app.services.ScreensaverService
